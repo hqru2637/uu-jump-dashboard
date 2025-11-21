@@ -3,7 +3,7 @@ import { pgTable, text, integer, doublePrecision, timestamp, bigserial } from 'd
 // デバイス管理（Unityから送信されたIDを格納）
 export const devices = pgTable('devices', {
   id: text('id').primaryKey(), // Unity側で生成したユニークID
-  displayName: text('display_name').default('PC[New]').notNull(), // 管理画面で編集可能
+  displayName: text('display_name').notNull(), // 管理画面で編集可能、初期値はAPIで自動生成(PC1, PC2...)
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 

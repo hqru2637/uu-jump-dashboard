@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { client } from '@/lib/hono';
-import { createClient } from '@/lib/supabase';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import { Loader2 } from 'lucide-react';
 
@@ -62,25 +61,13 @@ export default function DashboardPage() {
   useEffect(() => {
     fetchData();
 
-    const supabase = createClient();
-    const channel = supabase
-      .channel('table-db-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'results',
-        },
-        (payload) => {
-          console.log('New result received!', payload);
-          revalidate();
-        }
-      )
-      .subscribe();
+    // Poll every 30 seconds
+    const interval = setInterval(() => {
+      revalidate();
+    }, 30000);
 
     return () => {
-      supabase.removeChannel(channel);
+      clearInterval(interval);
     };
   }, []);
 
