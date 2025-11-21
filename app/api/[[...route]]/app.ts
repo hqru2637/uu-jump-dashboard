@@ -88,10 +88,10 @@ const routes = app
 
     // Hourly Graph (Last 24 hours)
     // Note: SQLite/Postgres differences exist. Assuming Postgres as per plan.
-    // date_trunc('hour', created_at)
+    // created_at is UTC. Convert to JST for grouping.
     const hourlyStats = await db.execute(sql`
       SELECT
-        date_trunc('hour', created_at) as hour,
+        date_trunc('hour', created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Tokyo') as hour,
         count(*) as count
       FROM ${results}
       WHERE created_at > now() - interval '24 hours'
@@ -100,11 +100,14 @@ const routes = app
     `);
 
     // Format for Recharts (needs string/number keys)
-    const graphData = hourlyStats.map((row: any) => ({
-      hour: new Date(row.hour).getHours() + ':00', // Simple formatting
-      count: Number(row.count),
-      fullDate: row.hour // Keep full date for tooltip if needed
-    }));
+    const graphData = hourlyStats.map((row: any) => {
+      const date = new Date(row.hour);
+      return {
+        hour: date.getHours() + ':00',
+        count: Number(row.count),
+        fullDate: row.hour,
+      };
+    });
 
     return c.json({
       totalPlays,
