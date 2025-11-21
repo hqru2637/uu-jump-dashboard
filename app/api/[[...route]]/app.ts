@@ -74,21 +74,33 @@ app.post(
 // B. Dashboard Endpoints (RPC Usage)
 const routes = app
   .get('/stats/ranking', async (c) => {
-    const ranking = await db
-      .select({
-        id: results.id,
-        displayName: devices.displayName,
-        mapName: results.mapName,
-        clearTime: results.clearTime,
-        jumpCount: results.jumpCount,
-        createdAt: results.createdAt,
-      })
-      .from(results)
-      .innerJoin(devices, eq(results.deviceId, devices.id))
-      .orderBy(asc(results.clearTime))
-      .limit(50);
+    // Get unique map names
+    const maps = await db
+      .selectDistinct({ mapName: results.mapName })
+      .from(results);
 
-    return c.json(ranking);
+    const rankingByMap: Record<string, any[]> = {};
+
+    for (const m of maps) {
+      const mapRanking = await db
+        .select({
+          id: results.id,
+          displayName: devices.displayName,
+          mapName: results.mapName,
+          clearTime: results.clearTime,
+          jumpCount: results.jumpCount,
+          createdAt: results.createdAt,
+        })
+        .from(results)
+        .innerJoin(devices, eq(results.deviceId, devices.id))
+        .where(eq(results.mapName, m.mapName))
+        .orderBy(asc(results.clearTime))
+        .limit(20); // Top 20 per map
+      
+      rankingByMap[m.mapName] = mapRanking;
+    }
+
+    return c.json(rankingByMap);
   })
   .get('/stats/history', async (c) => {
     const history = await db
