@@ -1,12 +1,14 @@
 import { useState, useEffect, useCallback } from 'react';
 import { client } from '@/lib/hono';
 import { RankingItem, HistoryItem, AnalyticsData } from '@/types/dashboard';
+import { useLastUpdated } from '@/components/providers/LastUpdatedProvider';
 
 export function useDashboardData() {
   const [ranking, setRanking] = useState<Record<string, RankingItem[]>>({});
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
+  const { updateLastUpdated } = useLastUpdated();
 
   const fetchData = useCallback(async (isPolling = false) => {
     if (!isPolling) setLoading(true);
@@ -20,12 +22,14 @@ export function useDashboardData() {
       if (rRes.ok) setRanking(await rRes.json());
       if (hRes.ok) setHistory(await hRes.json());
       if (aRes.ok) setAnalytics(await aRes.json());
+      
+      updateLastUpdated();
     } catch (e) {
       console.error('Failed to fetch data', e);
     } finally {
       if (!isPolling) setLoading(false);
     }
-  }, []);
+  }, [updateLastUpdated]);
 
   useEffect(() => {
     fetchData();

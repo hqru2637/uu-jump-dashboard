@@ -1,15 +1,36 @@
 'use client';
 
 import { Github } from 'lucide-react';
+import { useLastUpdated } from '@/components/providers/LastUpdatedProvider';
 import { useEffect, useState } from 'react';
 
 export function Footer() {
-  const [lastUpdated, setLastUpdated] = useState<string>('');
+  const { lastUpdated } = useLastUpdated();
+  const [timeAgo, setTimeAgo] = useState<string>('');
 
   useEffect(() => {
-    // クライアントサイドでのみ時刻を設定（ハイドレーションエラー防止）
-    setLastUpdated(new Date().toLocaleString('ja-JP'));
-  }, []);
+    if (!lastUpdated) {
+      setTimeAgo('');
+      return;
+    }
+
+    const updateTimeAgo = () => {
+      const now = new Date();
+      const diffInSeconds = Math.max(0, Math.floor((now.getTime() - lastUpdated.getTime()) / 1000));
+
+      if (diffInSeconds < 60) {
+        setTimeAgo(`${diffInSeconds}秒前`);
+      } else {
+        const diffInMinutes = Math.floor(diffInSeconds / 60);
+        setTimeAgo(`${diffInMinutes}分前`);
+      }
+    };
+
+    updateTimeAgo();
+    const interval = setInterval(updateTimeAgo, 1000);
+
+    return () => clearInterval(interval);
+  }, [lastUpdated]);
 
   return (
     <footer className="border-t py-6 mt-auto bg-gray-50">
@@ -26,7 +47,7 @@ export function Footer() {
           </a>
         </div>
         <div>
-          {lastUpdated && <span>最終更新: {lastUpdated}</span>}
+          {lastUpdated && <span>最終更新: {timeAgo}</span>}
         </div>
       </div>
     </footer>
