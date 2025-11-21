@@ -19,18 +19,16 @@ export function RankingView({ ranking }: Props) {
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rank</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Player</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jumps</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">順位</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">クリアタイム</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">合計ジャンプ数</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {items.map((item, index) => (
                 <tr key={item.id}>
                   <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">{index + 1}</td>
-                  <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">{item.displayName}</td>
-                  <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">{item.clearTime.toFixed(2)}s</td>
+                  <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">{item.clearTime.toFixed(1)}秒</td>
                   <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">{item.jumpCount}</td>
                 </tr>
               ))}

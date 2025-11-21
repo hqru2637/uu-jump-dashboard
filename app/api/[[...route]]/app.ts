@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import { z } from 'zod';
 import { zValidator } from '@hono/zod-validator';
+import { bearerAuth } from 'hono/bearer-auth';
 import { db } from '@/db';
 import { devices, results } from '@/db/schema';
 import { desc, eq, sql, asc } from 'drizzle-orm';
@@ -17,6 +18,7 @@ const submitSchema = z.object({
 
 app.post(
   '/game/submit',
+  bearerAuth({ token: process.env.GAME_API_TOKEN ?? '' }),
   zValidator('json', submitSchema),
   async (c) => {
     const { deviceId, mapName, clearTime, jumpCount } = c.req.valid('json');
