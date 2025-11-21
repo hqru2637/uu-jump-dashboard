@@ -10,7 +10,7 @@ pnpm dev
 Open [http://localhost:3000](http://localhost:3000) with your browser.
 
 ## Tech Stack
-- Next.js 15 (App Router)
+- Next.js 16 (App Router)
 - TypeScript
 - Drizzle ORM
 - Hono
