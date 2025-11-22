@@ -15,7 +15,7 @@ export default function DashboardPage() {
   const { ranking, history, analytics, loading } = useDashboardData();
 
   return (
-    <div className="container mx-auto px-2 py-2 md:px-4 md:py-6 max-w-8xl">
+    <div className="container mx-auto px-2 py-2 md:px-12 md:py-6 max-w-8xl">
       <div className="flex justify-between items-center m-4 md:m-0 md:mt-2 md:-mb-2">
         <h1 className="text-2xl md:text-4xl font-bold text-gray-900">UU-JUMP Dashboard</h1>
         <div className="hidden md:block">
