@@ -62,15 +62,15 @@ export function HistoryView({ history }: Props) {
   ];
 
   return (
-    <div className="bg-white shadow rounded-lg overflow-hidden">
+    <div className="bg-white/80 shadow rounded-lg overflow-hidden">
       <table className="min-w-full divide-y divide-gray-200">
-        <thead className="bg-gray-50">
+        <thead className="bg-gray-50/80">
           <tr>
             {columns.map((col) => (
               <th
                 key={col.key}
                 onClick={() => requestSort(col.key)}
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 group select-none"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100/80 group select-none"
               >
                 <div className="flex items-center">
                   {col.label}
@@ -80,7 +80,7 @@ export function HistoryView({ history }: Props) {
             ))}
           </tr>
         </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
+        <tbody className="bg-white/80 divide-y divide-gray-200">
           {sortedHistory.map((item) => (
             <tr key={item.id}>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.id}</td>

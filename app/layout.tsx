@@ -27,8 +27,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col relative`}
       >
+        <div 
+          className="fixed inset-0 z-[-1] bg-cover bg-center bg-no-repeat opacity-10 pointer-events-none"
+          style={{ backgroundImage: "url('/bg.png')" }}
+        />
         <LastUpdatedProvider>
           <main className="flex-grow">
             {children}
