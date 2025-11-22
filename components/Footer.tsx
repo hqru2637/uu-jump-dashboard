@@ -33,7 +33,7 @@ export function Footer() {
   }, [lastUpdated]);
 
   return (
-    <footer className="border-t py-6 mt-auto bg-gray-50">
+    <footer className="border-t py-5 mt-auto bg-gray-50">
       <div className="container mx-auto px-8 flex flex-col md:flex-row justify-between items-center text-gray-500 text-sm">
         <div className="flex items-center space-x-4 mb-4 md:mb-0">
           <a
