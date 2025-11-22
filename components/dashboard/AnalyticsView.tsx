@@ -5,6 +5,13 @@ type Props = {
   analytics: AnalyticsData | null;
 };
 
+const TOOLTIP_STYLE = {
+  backgroundColor: 'rgba(255, 255, 255, 0.95)',
+  borderRadius: '8px',
+  border: 'none',
+  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+};
+
 export function AnalyticsView({ analytics }: Props) {
   if (!analytics) return null;
 
@@ -24,7 +31,7 @@ export function AnalyticsView({ analytics }: Props) {
               <XAxis dataKey="time" tick={{fontSize: 12}} />
               <YAxis allowDecimals={false} tick={{fontSize: 14}} width={20} />
               <Tooltip 
-                contentStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.95)', borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
+                contentStyle={TOOLTIP_STYLE}
               />
               <Bar dataKey="count" fill="#4f46e5" radius={[4, 4, 0, 0]} name="Plays" />
             </BarChart>
@@ -41,7 +48,7 @@ export function AnalyticsView({ analytics }: Props) {
               <XAxis dataKey="time" tick={{fontSize: 12}} />
               <YAxis allowDecimals={false} tick={{fontSize: 14}} width={20} />
               <Tooltip 
-                contentStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.95)', borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
+                contentStyle={TOOLTIP_STYLE}
               />
               <Bar dataKey="count" fill="#3ec73eff" radius={[4, 4, 0, 0]} name="Plays" />
             </BarChart>
@@ -64,7 +71,7 @@ export function AnalyticsView({ analytics }: Props) {
                       <XAxis dataKey="range" tick={{fontSize: 10}} interval={0} angle={-45} textAnchor="end" height={60} />
                       <YAxis allowDecimals={false} tick={{fontSize: 12}} width={40} />
                       <Tooltip 
-                        contentStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.95)', borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
+                        contentStyle={TOOLTIP_STYLE}
                       />
                       <Bar dataKey="count" fill="#f59e0b" radius={[4, 4, 0, 0]} name="Clears" />
                     </BarChart>

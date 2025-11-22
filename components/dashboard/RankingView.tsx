@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { RankingItem } from '@/types/dashboard';
 
@@ -12,11 +12,14 @@ function RankingCard({ mapName, items }: { mapName: string; items: RankingItem[]
   const [isExpanded, setIsExpanded] = useState(false);
   const INITIAL_DISPLAY_COUNT = 8;
 
-  const displayedItems = isExpanded ? items : items.slice(0, INITIAL_DISPLAY_COUNT);
+  const displayedItems = useMemo(() => {
+    return isExpanded ? items : items.slice(0, INITIAL_DISPLAY_COUNT);
+  }, [isExpanded, items]);
+
   const hasMore = items.length > INITIAL_DISPLAY_COUNT;
 
   return (
-    <div className="w-full md:w-auto md:min-w-[450px] flex-1 bg-white/80 shadow-lg rounded-xl overflow-hidden border border-gray-100 flex flex-col h-fit">
+    <div className="w-full md:w-auto md:min-w-[450px] flex-1 bg-white/80 shadow-lg rounded-xl overflow-hidden border border-gray-200 flex flex-col h-fit">
       <div className="bg-gray-100/90 px-4 py-3 md:px-8 md:py-3 border-b border-gray-200 text-center">
         <h3 className="text-lg md:text-xl font-bold text-gray-800">{mapName}</h3>
       </div>
@@ -24,8 +27,8 @@ function RankingCard({ mapName, items }: { mapName: string; items: RankingItem[]
         <thead className="bg-gray-50/90">
           <tr>
             <th className="px-3 py-3 md:px-6 md:py-4 text-center text-xs md:text-sm font-semibold text-gray-600 uppercase tracking-wider">順位</th>
-            <th className="px-3 py-3 md:px-6 md:py-4 text-left text-xs md:text-sm font-semibold text-gray-600 uppercase tracking-wider">クリアタイム</th>
-            <th className="px-3 py-3 md:px-6 md:py-4 text-left text-xs md:text-sm font-semibold text-gray-600 uppercase tracking-wider">合計ジャンプ数</th>
+            <th className="px-3 py-3 md:px-6 md:py-4 text-left text-xs md:text-sm font-semibold text-gray-600 uppercase tracking-wider">タイム</th>
+            <th className="px-3 py-3 md:px-6 md:py-4 text-left text-xs md:text-sm font-semibold text-gray-600 uppercase tracking-wider">ジャンプ数</th>
           </tr>
         </thead>
         <tbody className="bg-white/80 divide-y divide-gray-200">
@@ -64,17 +67,19 @@ function RankingCard({ mapName, items }: { mapName: string; items: RankingItem[]
 }
 
 export function RankingView({ ranking }: Props) {
+  const sortedRanking = useMemo(() => {
+    return Object.entries(ranking).sort(([a], [b]) => a.localeCompare(b));
+  }, [ranking]);
+
   if (Object.keys(ranking).length === 0) {
     return <div className="w-full text-center py-10 text-gray-500">No ranking data available</div>;
   }
 
   return (
-    <div className="flex flex-col md:flex-row gap-6 md:gap-8 md:overflow-x-auto items-start pb-6 px-1">
-      {Object.entries(ranking)
-        .sort(([a], [b]) => a.localeCompare(b))
-        .map(([mapName, items]) => (
-          <RankingCard key={mapName} mapName={mapName} items={items} />
-        ))}
+    <div className="flex flex-col md:flex-row gap-6 md:gap-5 md:overflow-x-auto items-start pb-6 px-1">
+      {sortedRanking.map(([mapName, items]) => (
+        <RankingCard key={mapName} mapName={mapName} items={items} />
+      ))}
     </div>
   );
 }

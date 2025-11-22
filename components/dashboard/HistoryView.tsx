@@ -13,6 +13,15 @@ type SortConfig = {
   direction: 'asc' | 'desc';
 };
 
+const COLUMNS: { key: keyof HistoryItem; label: string }[] = [
+  // { key: 'id', label: 'ID' },
+  { key: 'displayName', label: 'デバイス' },
+  { key: 'mapName', label: 'マップ' },
+  { key: 'clearTime', label: 'タイム' },
+  { key: 'jumpCount', label: 'ジャンプ数' },
+  { key: 'createdAt', label: '日時' },
+];
+
 export function HistoryView({ history }: Props) {
   const [sortConfig, setSortConfig] = useState<SortConfig>({ key: 'createdAt', direction: 'desc' });
   const [filterDevice, setFilterDevice] = useState<string>('');
@@ -86,15 +95,6 @@ export function HistoryView({ history }: Props) {
     );
   };
 
-  const columns: { key: keyof HistoryItem; label: string }[] = [
-    // { key: 'id', label: 'ID' },
-    { key: 'displayName', label: 'デバイス' },
-    { key: 'mapName', label: 'マップ' },
-    { key: 'clearTime', label: 'タイム' },
-    { key: 'jumpCount', label: 'ジャンプ数' },
-    { key: 'createdAt', label: '日時' },
-  ];
-
   return (
     <div className="space-y-4">
       <div className="bg-white/80 p-4 rounded-xl shadow-sm border border-gray-100 flex flex-wrap gap-4 items-center">
@@ -140,7 +140,7 @@ export function HistoryView({ history }: Props) {
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50/90">
             <tr>
-              {columns.map((col) => (
+              {COLUMNS.map((col) => (
                 <th
                   key={col.key}
                   onClick={() => requestSort(col.key)}
@@ -167,7 +167,7 @@ export function HistoryView({ history }: Props) {
             ))}
             {filteredAndSortedHistory.length === 0 && (
               <tr>
-                <td colSpan={columns.length} className="px-6 py-10 text-center text-gray-500">
+                <td colSpan={COLUMNS.length} className="px-6 py-10 text-center text-gray-500">
                   該当するデータがありません
                 </td>
               </tr>
