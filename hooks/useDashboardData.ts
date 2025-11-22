@@ -37,7 +37,7 @@ export function useDashboardData() {
     // Poll every 30 seconds
     const interval = setInterval(() => {
       fetchData(true);
-    }, 30000);
+    }, 10_000);
 
     return () => {
       clearInterval(interval);
