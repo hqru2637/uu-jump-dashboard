@@ -10,12 +10,12 @@ export function AnalyticsView({ analytics }: Props) {
 
   return (
     <div className="space-y-8">
-      <div className="bg-white/80 shadow-lg rounded-xl p-8 border border-gray-100">
-        <h3 className="text-xl font-bold text-gray-800">Total Plays</h3>
+      <div className="bg-white/80 shadow-lg rounded-xl p-6 md:p-8 border border-gray-100">
+        <h3 className="text-xl font-bold text-gray-800">Total Goals</h3>
         <p className="text-5xl font-extrabold text-indigo-600 mt-2">{analytics.totalPlays}</p>
       </div>
 
-      <div className="bg-white/80 shadow-lg rounded-xl p-8 border border-gray-100">
+      <div className="bg-white/80 shadow-lg rounded-xl p-6 md:p-8 border border-gray-100">
         <h3 className="text-xl font-bold text-gray-800 mb-6">Hourly Activity (Last 24h)</h3>
         <div className="h-80">
           <ResponsiveContainer width="100%" height="100%">

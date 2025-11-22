@@ -30,7 +30,11 @@ function RankingCard({ mapName, items }: { mapName: string; items: RankingItem[]
         </thead>
         <tbody className="bg-white/80 divide-y divide-gray-200">
           {displayedItems.map((item, index) => (
-            <tr key={item.id} className="hover:bg-white/50 transition-colors">
+            <tr 
+              key={item.id} 
+              className="hover:bg-white/50 transition-colors group relative"
+              title={`デバイス: ${item.displayName}\n日時: ${new Date(item.createdAt).toLocaleString()}`}
+            >
               <td className="px-3 py-3 md:px-6 whitespace-nowrap text-base md:text-xl font-bold text-gray-900 text-center">{index + 1}</td>
               <td className="px-3 py-3 md:px-6 whitespace-nowrap text-sm md:text-base text-gray-700 text-left">{item.clearTime.toFixed(1)}秒</td>
               <td className="px-3 py-3 md:px-6 whitespace-nowrap text-sm md:text-base text-gray-700 text-left">{item.jumpCount}</td>
@@ -65,7 +69,7 @@ export function RankingView({ ranking }: Props) {
   }
 
   return (
-    <div className="flex flex-col md:flex-row gap-6 md:gap-8 md:overflow-x-auto items-start">
+    <div className="flex flex-col md:flex-row gap-6 md:gap-8 md:overflow-x-auto items-start pb-6 px-1">
       {Object.entries(ranking)
         .sort(([a], [b]) => a.localeCompare(b))
         .map(([mapName, items]) => (

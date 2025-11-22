@@ -14,7 +14,7 @@ export default function DashboardPage() {
   const { ranking, history, analytics, loading } = useDashboardData();
 
   return (
-    <div className="container mx-auto p-2 md:p-8 max-w-8xl">
+    <div className="container mx-auto p-2 md:p-6 max-w-8xl">
       <h1 className="text-2xl md:text-4xl font-bold m-4 md:m-5 text-gray-900">UU-JUMP Dashboard</h1>
       
       {/* Tabs */}
@@ -36,9 +36,11 @@ export default function DashboardPage() {
 
       {loading && <div className="flex justify-center p-10"><Loader2 className="animate-spin" /></div>}
 
-      {!loading && activeTab === 'ランキング' && <RankingView ranking={ranking} />}
-      {!loading && activeTab === 'プレイ履歴' && <HistoryView history={history} />}
-      {!loading && activeTab === '統計' && <AnalyticsView analytics={analytics} />}
+      <div key={activeTab} className="animate-fade-in-up">
+        {!loading && activeTab === 'ランキング' && <RankingView ranking={ranking} />}
+        {!loading && activeTab === 'プレイ履歴' && <HistoryView history={history} />}
+        {!loading && activeTab === '統計' && <AnalyticsView analytics={analytics} />}
+      </div>
     </div>
   );
 }
