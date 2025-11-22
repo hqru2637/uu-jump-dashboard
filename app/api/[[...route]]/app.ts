@@ -97,7 +97,7 @@ const routes = app
         .innerJoin(devices, eq(results.deviceId, devices.id))
         .where(eq(results.mapName, m.mapName))
         .orderBy(asc(results.clearTime))
-        .limit(5);
+        .limit(8);
       
       rankingByMap[m.mapName] = mapRanking;
     }
