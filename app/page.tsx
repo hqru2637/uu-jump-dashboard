@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { Loader2 } from 'lucide-react';
 import { useDashboardData } from '@/hooks/useDashboardData';
 import { RankingView } from '@/components/dashboard/RankingView';
@@ -15,7 +16,19 @@ export default function DashboardPage() {
 
   return (
     <div className="container mx-auto p-2 md:p-6 max-w-8xl">
-      <h1 className="text-2xl md:text-4xl font-bold m-4 md:m-5 text-gray-900">UU-JUMP Dashboard</h1>
+      <div className="flex justify-between items-center m-4 md:m-5">
+        <h1 className="text-2xl md:text-4xl font-bold text-gray-900">UU-JUMP Dashboard</h1>
+        <div className="hidden md:block">
+          <span className="text-sm text-gray-500 mb-2 block text-center">スマホでアクセス</span>
+          <Image 
+            src="/site_qr.png" 
+            alt="Site QR" 
+            width={100} 
+            height={100} 
+            className="rounded-lg shadow-sm border border-gray-200"
+          />
+        </div>
+      </div>
       
       {/* Tabs */}
       <div className="flex space-x-4 md:space-x-6 mb-6 md:mb-8 border-b border-gray-300 overflow-x-auto">

@@ -10,7 +10,7 @@ type Props = {
 
 function RankingCard({ mapName, items }: { mapName: string; items: RankingItem[] }) {
   const [isExpanded, setIsExpanded] = useState(false);
-  const INITIAL_DISPLAY_COUNT = 10;
+  const INITIAL_DISPLAY_COUNT = 8;
 
   const displayedItems = isExpanded ? items : items.slice(0, INITIAL_DISPLAY_COUNT);
   const hasMore = items.length > INITIAL_DISPLAY_COUNT;
