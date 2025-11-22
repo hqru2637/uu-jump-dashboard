@@ -1,22 +1,23 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { useMemo } from 'react';
+import { ChevronDown, ChevronUp, Loader2 } from 'lucide-react';
 import { RankingItem } from '@/types/dashboard';
+import { useRankingPagination } from '@/hooks/useRankingPagination';
 
 type Props = {
   ranking: Record<string, RankingItem[]>;
 };
 
 function RankingCard({ mapName, items }: { mapName: string; items: RankingItem[] }) {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const INITIAL_DISPLAY_COUNT = 8;
-
-  const displayedItems = useMemo(() => {
-    return isExpanded ? items : items.slice(0, INITIAL_DISPLAY_COUNT);
-  }, [isExpanded, items]);
-
-  const hasMore = items.length > INITIAL_DISPLAY_COUNT;
+  const {
+    displayedItems,
+    canShowMore,
+    isExpanded,
+    isLoading,
+    showMore,
+    collapse,
+  } = useRankingPagination(items, mapName);
 
   return (
     <div className="w-full md:w-auto md:min-w-[450px] flex-1 bg-white/80 shadow-lg rounded-xl overflow-hidden border border-gray-200 flex flex-col h-fit">
@@ -50,17 +51,30 @@ function RankingCard({ mapName, items }: { mapName: string; items: RankingItem[]
           )}
         </tbody>
       </table>
-      {hasMore && (
-        <button
-          onClick={() => setIsExpanded(!isExpanded)}
-          className="w-full py-3 bg-gray-50/80 hover:bg-gray-100/80 border-t border-gray-200 text-gray-600 font-medium flex items-center justify-center transition-colors text-sm md:text-base"
-        >
-          {isExpanded ? (
-            <ChevronUp className="w-4 h-4 md:w-5 md:h-5" />
-          ) : (
-            <ChevronDown className="w-4 h-4 md:w-5 md:h-5" />
+      {(canShowMore || isExpanded) && (
+        <div className="flex flex-col">
+          {isExpanded && (
+            <button
+              onClick={collapse}
+              className="w-full py-3 bg-gray-50/80 hover:bg-gray-100/80 border-t border-gray-200 text-gray-600 font-medium flex items-center justify-center transition-colors text-sm md:text-base"
+            >
+              <ChevronUp className="w-4 h-4 md:w-5 md:h-5" />
+            </button>
           )}
-        </button>
+          {canShowMore && (
+            <button
+              onClick={showMore}
+              disabled={isLoading}
+              className="w-full py-3 bg-gray-50/80 hover:bg-gray-100/80 border-t border-gray-200 text-gray-600 font-medium flex items-center justify-center transition-colors text-sm md:text-base disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isLoading ? (
+                <Loader2 className="w-4 h-4 md:w-5 md:h-5 animate-spin" />
+              ) : (
+                <ChevronDown className="w-4 h-4 md:w-5 md:h-5" />
+              )}
+            </button>
+          )}
+        </div>
       )}
     </div>
   );

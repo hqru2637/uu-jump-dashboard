@@ -121,6 +121,38 @@ const routes = app
 
     return c.json(history);
   })
+  .get(
+    '/stats/ranking/more',
+    zValidator(
+      'query',
+      z.object({
+        mapName: z.string(),
+        offset: z.string().transform((v) => parseInt(v, 10)),
+        limit: z.string().transform((v) => parseInt(v, 10)).default('10'),
+      })
+    ),
+    async (c) => {
+      const { mapName, offset, limit } = c.req.valid('query');
+
+      const items = await db
+        .select({
+          id: results.id,
+          displayName: devices.displayName,
+          mapName: results.mapName,
+          clearTime: results.clearTime,
+          jumpCount: results.jumpCount,
+          createdAt: results.createdAt,
+        })
+        .from(results)
+        .innerJoin(devices, eq(results.deviceId, devices.id))
+        .where(eq(results.mapName, mapName))
+        .orderBy(asc(results.clearTime))
+        .offset(offset)
+        .limit(limit);
+
+      return c.json(items);
+    }
+  )
   .get('/stats/analytics', async (c) => {
     // Total Plays
     const totalPlaysResult = await db
