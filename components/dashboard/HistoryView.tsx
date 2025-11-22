@@ -54,23 +54,23 @@ export function HistoryView({ history }: Props) {
 
   const columns: { key: keyof HistoryItem; label: string }[] = [
     { key: 'id', label: 'ID' },
-    { key: 'displayName', label: 'Player' },
-    { key: 'mapName', label: 'Map' },
-    { key: 'clearTime', label: 'Clear Time' },
-    { key: 'jumpCount', label: 'Jumps' },
-    { key: 'createdAt', label: 'Date' },
+    { key: 'displayName', label: 'デバイス' },
+    { key: 'mapName', label: 'マップ' },
+    { key: 'clearTime', label: 'クリアタイム' },
+    { key: 'jumpCount', label: '合計ジャンプ数' },
+    { key: 'createdAt', label: '日時' },
   ];
 
   return (
-    <div className="bg-white/80 shadow rounded-lg overflow-hidden">
+    <div className="bg-white/80 shadow-lg rounded-xl overflow-hidden border border-gray-100">
       <table className="min-w-full divide-y divide-gray-200">
-        <thead className="bg-gray-50/80">
+        <thead className="bg-gray-50/90">
           <tr>
             {columns.map((col) => (
               <th
                 key={col.key}
                 onClick={() => requestSort(col.key)}
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100/80 group select-none"
+                className="px-6 py-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider cursor-pointer hover:bg-gray-100/80 group select-none transition-colors"
               >
                 <div className="flex items-center">
                   {col.label}
@@ -82,13 +82,13 @@ export function HistoryView({ history }: Props) {
         </thead>
         <tbody className="bg-white/80 divide-y divide-gray-200">
           {sortedHistory.map((item) => (
-            <tr key={item.id}>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.id}</td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.displayName}</td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.mapName}</td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.clearTime.toFixed(2)}s</td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.jumpCount}</td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{new Date(item.createdAt).toLocaleString()}</td>
+            <tr key={item.id} className="hover:bg-white/50 transition-colors">
+              <td className="px-6 py-5 whitespace-nowrap text-base text-gray-700">{item.id}</td>
+              <td className="px-6 py-5 whitespace-nowrap text-base font-medium text-gray-900">{item.displayName}</td>
+              <td className="px-6 py-5 whitespace-nowrap text-base text-gray-700">{item.mapName}</td>
+              <td className="px-6 py-5 whitespace-nowrap text-base text-gray-700">{item.clearTime.toFixed(2)}s</td>
+              <td className="px-6 py-5 whitespace-nowrap text-base text-gray-700">{item.jumpCount}</td>
+              <td className="px-6 py-5 whitespace-nowrap text-base text-gray-500">{new Date(item.createdAt).toLocaleString()}</td>
             </tr>
           ))}
         </tbody>

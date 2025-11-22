@@ -14,19 +14,19 @@ export default function DashboardPage() {
   const { ranking, history, analytics, loading } = useDashboardData();
 
   return (
-    <div className="container mx-auto p-8">
-      <h1 className="text-3xl font-bold mb-8">UU-JUMP Dashboard</h1>
+    <div className="container mx-auto p-6 max-w-7xl">
+      <h1 className="text-4xl font-bold mb-10 text-gray-900">UU-JUMP Dashboard</h1>
       
       {/* Tabs */}
-      <div className="flex space-x-4 mb-6 border-b">
+      <div className="flex space-x-6 mb-8 border-b border-gray-300">
         {(['ランキング', 'プレイ履歴', '統計'] as const).map((tab: Tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`py-2 px-4 font-medium ${
+            className={`py-3 px-6 text-lg font-medium transition-colors ${
               activeTab === tab
-                ? 'border-b-2 border-black text-black'
-                : 'text-gray-500 hover:text-gray-700'
+                ? 'border-b-4 border-indigo-600 text-indigo-600'
+                : 'text-gray-500 hover:text-gray-800 hover:border-gray-300'
             }`}
           >
             {tab.charAt(0).toUpperCase() + tab.slice(1)}
