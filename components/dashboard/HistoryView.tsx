@@ -62,7 +62,7 @@ export function HistoryView({ history }: Props) {
   ];
 
   return (
-    <div className="bg-white/80 shadow-lg rounded-xl overflow-hidden border border-gray-100">
+    <div className="bg-white/80 shadow-lg rounded-xl overflow-hidden border border-gray-100 overflow-x-auto">
       <table className="min-w-full divide-y divide-gray-200">
         <thead className="bg-gray-50/90">
           <tr>
