@@ -1,0 +1,197 @@
+import { db } from '@/db';
+import { devices, results } from '@/db/schema';
+import { desc, eq, sql, asc } from 'drizzle-orm';
+
+export const getRanking = async () => {
+  // Get unique map names
+  const maps = await db
+    .selectDistinct({ mapName: results.mapName })
+    .from(results);
+
+  const rankingByMap: Record<string, any[]> = {};
+
+  for (const m of maps) {
+    const mapRanking = await db
+      .select({
+        id: results.id,
+        displayName: devices.displayName,
+        mapName: results.mapName,
+        clearTime: results.clearTime,
+        jumpCount: results.jumpCount,
+        createdAt: results.createdAt,
+      })
+      .from(results)
+      .innerJoin(devices, eq(results.deviceId, devices.id))
+      .where(eq(results.mapName, m.mapName))
+      .orderBy(asc(results.clearTime))
+      .limit(20);
+
+    rankingByMap[m.mapName] = mapRanking;
+  }
+
+  return rankingByMap;
+};
+
+export const getHistory = async () => {
+  const history = await db
+    .select({
+      id: results.id,
+      displayName: devices.displayName,
+      mapName: results.mapName,
+      clearTime: results.clearTime,
+      jumpCount: results.jumpCount,
+      createdAt: results.createdAt,
+    })
+    .from(results)
+    .innerJoin(devices, eq(results.deviceId, devices.id))
+    .orderBy(desc(results.createdAt))
+    .limit(100);
+
+  return history;
+};
+
+export const getMoreRanking = async (mapName: string, offset: number, limit: number) => {
+  const items = await db
+    .select({
+      id: results.id,
+      displayName: devices.displayName,
+      mapName: results.mapName,
+      clearTime: results.clearTime,
+      jumpCount: results.jumpCount,
+      createdAt: results.createdAt,
+    })
+    .from(results)
+    .innerJoin(devices, eq(results.deviceId, devices.id))
+    .where(eq(results.mapName, mapName))
+    .orderBy(asc(results.clearTime))
+    .offset(offset)
+    .limit(limit);
+
+  return items;
+};
+
+export const getAnalytics = async () => {
+  // Total Plays
+  const totalPlaysResult = await db
+    .select({ count: sql<number>`count(*)` })
+    .from(results);
+  const totalPlays = Number(totalPlaysResult[0]?.count || 0);
+
+  // Recent Activity (Last 12 hours, 30 min intervals)
+  const recentStats = await db.execute(sql`
+      SELECT
+        to_char(to_timestamp(floor(extract(epoch from (created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Tokyo')) / 1800) * 1800), 'YYYY-MM-DD HH24:MI') as time_slot,
+        count(*) as count
+      FROM ${results}
+      WHERE created_at > now() - interval '12 hours'
+      GROUP BY 1
+      ORDER BY 1 ASC
+    `);
+
+  const recentActivity = recentStats.map((row: any) => {
+    // row.time_slot is "YYYY-MM-DD HH:mm" (Tokyo time)
+    const timeStr = row.time_slot.substring(11, 16); // "HH:mm"
+    return {
+      time: timeStr,
+      count: Number(row.count),
+      fullDate: row.time_slot,
+    };
+  });
+
+  // Activity Trend (Last 48 hours, 2 hour intervals)
+  const trendStats = await db.execute(sql`
+      SELECT
+        to_char(to_timestamp(floor(extract(epoch from (created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Tokyo')) / 7200) * 7200), 'YYYY-MM-DD HH24:MI') as time_slot,
+        count(*) as count
+      FROM ${results}
+      WHERE created_at > now() - interval '48 hours'
+      GROUP BY 1
+      ORDER BY 1 ASC
+    `);
+
+  const activityTrend = trendStats.map((row: any) => {
+    // row.time_slot is "YYYY-MM-DD HH:mm"
+    const datePart = row.time_slot.substring(5, 10).replace('-', '/');
+    const timePart = row.time_slot.substring(11, 16);
+    return {
+      time: `${datePart} ${timePart}`,
+      count: Number(row.count),
+      fullDate: row.time_slot,
+    };
+  });
+
+  // Histograms per map
+  const maps = await db
+    .selectDistinct({ mapName: results.mapName })
+    .from(results);
+
+  const histograms: { mapName: string; data: any[] }[] = [];
+
+  for (const m of maps) {
+    const times = await db
+      .select({ clearTime: results.clearTime })
+      .from(results)
+      .where(eq(results.mapName, m.mapName));
+
+    // Sort for percentile calculation
+    const clearTimes = times.map(t => t.clearTime).sort((a, b) => a - b);
+    if (clearTimes.length === 0) continue;
+
+    const min = clearTimes[0];
+
+    // Use 95th percentile to cut off outliers
+    const p95Index = Math.floor(clearTimes.length * 0.95);
+    // If data count is small, use max, otherwise use p95
+    const maxLimit = clearTimes.length > 10 ? clearTimes[p95Index] : clearTimes[clearTimes.length - 1];
+
+    // Determine bin size (aim for ~15 bins based on the effective range)
+    let binSize = Math.ceil((maxLimit - min) / 15);
+    if (binSize < 1) binSize = 1;
+
+    // Align start to binSize
+    const start = Math.floor(min / binSize) * binSize;
+    // Ensure we cover the max limit
+    const end = Math.ceil(maxLimit / binSize) * binSize + binSize;
+
+    const bins: Record<number, number> = {};
+    // Initialize bins
+    for (let i = start; i < end; i += binSize) {
+      bins[i] = 0;
+    }
+
+    // Count frequencies (only up to maxLimit)
+    clearTimes.forEach(t => {
+      if (t > end) return; // Skip outliers for the visualization
+
+      // Find the lower bound of the bin
+      const bin = Math.floor(t / binSize) * binSize;
+      // Just in case logic to ensure it falls into a valid bin
+      if (bins[bin] !== undefined) {
+        bins[bin]++;
+      }
+    });
+
+    const histogramData = Object.entries(bins)
+      .map(([rangeStart, count]) => ({
+        range: `${rangeStart}-${Number(rangeStart) + binSize}s`,
+        count,
+        min: Number(rangeStart)
+      }))
+      .sort((a, b) => a.min - b.min);
+
+    histograms.push({
+      mapName: m.mapName,
+      data: histogramData
+    });
+  }
+
+  // Sort histograms by map name
+  histograms.sort((a, b) => a.mapName.localeCompare(b.mapName));
+
+  return {
+    totalPlays,
+    recentActivity,
+    activityTrend,
+    histograms
+  };
+};
