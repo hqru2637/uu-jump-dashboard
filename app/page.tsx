@@ -14,7 +14,7 @@ export default function DashboardPage() {
   const { ranking, history, analytics, loading } = useDashboardData();
 
   return (
-    <div className="container mx-auto p-2 md:p-10 max-w-7xl">
+    <div className="container mx-auto p-2 md:p-10 max-w-8xl">
       <h1 className="text-2xl md:text-4xl font-bold m-4 md:m-6 text-gray-900">UU-JUMP Dashboard</h1>
       
       {/* Tabs */}
