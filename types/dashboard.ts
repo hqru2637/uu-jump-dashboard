@@ -9,7 +9,20 @@ export type RankingItem = {
 
 export type HistoryItem = RankingItem;
 
+export type HistogramData = {
+  range: string;
+  count: number;
+  min: number;
+};
+
+export type MapHistogram = {
+  mapName: string;
+  data: HistogramData[];
+};
+
 export type AnalyticsData = {
   totalPlays: number;
-  graphData: { hour: string; count: number; fullDate: string }[];
+  recentActivity: { time: string; count: number; fullDate: string }[];
+  activityTrend: { time: string; count: number; fullDate: string }[];
+  histograms: MapHistogram[];
 };
