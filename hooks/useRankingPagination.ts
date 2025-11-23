@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { RankingItem } from '@/types/dashboard';
 import { client } from '@/lib/hono';
 
@@ -11,6 +11,17 @@ export function useRankingPagination(initialItems: RankingItem[], mapName: strin
   const [displayCount, setDisplayCount] = useState(INITIAL_DISPLAY_COUNT);
   const [isLoading, setIsLoading] = useState(false);
   const [serverHasMore, setServerHasMore] = useState(initialItems.length >= SECOND_STEP_COUNT);
+
+  useEffect(() => {
+    setRankingItems((prev) => {
+      // If we have loaded more items than the initial batch,
+      // update the top portion while preserving the extra items.
+      if (prev.length > initialItems.length) {
+        return [...initialItems, ...prev.slice(initialItems.length)];
+      }
+      return initialItems;
+    });
+  }, [initialItems]);
 
   const displayedItems = useMemo(() => {
     return rankingItems.slice(0, displayCount);
