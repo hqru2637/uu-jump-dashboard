@@ -160,7 +160,7 @@ export function HistoryView({ history }: Props) {
                 {/* <td className="px-6 py-5 whitespace-nowrap text-base text-gray-700">{item.id}</td> */}
                 <td className="px-4 py-3 whitespace-nowrap text-base font-medium text-gray-900">{item.displayName}</td>
                 <td className="px-4 py-3 whitespace-nowrap text-base text-gray-700">{item.mapName}</td>
-                <td className="px-4 py-3 whitespace-nowrap text-base text-gray-700">{item.clearTime.toFixed(1)}秒</td>
+                <td className="px-4 py-3 whitespace-nowrap text-base text-gray-700">{item.clearTime.toFixed(2)}秒</td>
                 <td className="px-4 py-3 whitespace-nowrap text-base text-gray-700">{item.jumpCount}</td>
                 <td className="px-4 py-3 whitespace-nowrap text-base text-gray-500">{new Date(item.createdAt).toLocaleString()}</td>
               </tr>
