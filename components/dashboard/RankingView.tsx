@@ -40,7 +40,7 @@ function RankingCard({ mapName, items }: { mapName: string; items: RankingItem[]
               title={`デバイス: ${item.displayName}\n日時: ${new Date(item.createdAt).toLocaleString()}`}
             >
               <td className="px-3 py-3 md:px-6 whitespace-nowrap text-base md:text-xl font-bold text-gray-900 text-center">{index + 1}</td>
-              <td className="px-3 py-3 md:px-6 whitespace-nowrap text-sm md:text-base text-gray-700 text-left">{item.clearTime.toFixed(1)}秒</td>
+              <td className="px-3 py-3 md:px-6 whitespace-nowrap text-sm md:text-base text-gray-700 text-left">{item.clearTime.toFixed(2)}秒</td>
               <td className="px-3 py-3 md:px-6 whitespace-nowrap text-sm md:text-base text-gray-700 text-left">{item.jumpCount}</td>
             </tr>
           ))}
