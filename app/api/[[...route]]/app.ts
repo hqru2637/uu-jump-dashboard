@@ -15,20 +15,22 @@ const submitSchema = z.object({
   jumpCount: z.number(),
 });
 
+// ゲームの公開に伴いトークンが誰でも分かるようになったため、ランキングの更新は停止する。
 app.post(
   '/game/submit',
-  bearerAuth({ token: process.env.GAME_API_TOKEN ?? '' }),
-  zValidator('json', submitSchema),
+  // bearerAuth({ token: process.env.GAME_API_TOKEN ?? '' }),
+  // zValidator('json', submitSchema),
   async (c) => {
-    const { deviceId, mapName, clearTime, jumpCount } = c.req.valid('json');
+    // const { deviceId, mapName, clearTime, jumpCount } = c.req.valid('json');
 
-    try {
-      await submitGameResult({ deviceId, mapName, clearTime, jumpCount });
-      return c.json({ success: true });
-    } catch (e) {
-      console.error(e);
-      return c.json({ success: false, error: 'Internal Server Error' }, 500);
-    }
+    // try {
+    //   await submitGameResult({ deviceId, mapName, clearTime, jumpCount });
+    //   return c.json({ success: true });
+    // } catch (e) {
+    //   console.error(e);
+    //   return c.json({ success: false, error: 'Internal Server Error' }, 500);
+    // }
+    return c.status(410);
   }
 );
 
