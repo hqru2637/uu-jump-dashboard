@@ -13,30 +13,30 @@
   "dependencies": {
     "@hono/zod-validator": "^0.7.5",
     "@supabase/ssr": "^0.7.0",
-    "@supabase/supabase-js": "^2.84.0",
+    "@supabase/supabase-js": "^2.86.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "drizzle-orm": "^0.44.7",
-    "hono": "^4.10.6",
-    "lucide-react": "^0.554.0",
-    "next": "16.0.3",
+    "hono": "^4.10.7",
+    "lucide-react": "^0.555.0",
+    "next": "16.0.7",
     "postgres": "^3.4.7",
-    "react": "19.2.0",
-    "react-dom": "19.2.0",
-    "recharts": "^3.4.1",
+    "react": "19.2.1",
+    "react-dom": "19.2.1",
+    "recharts": "^3.5.1",
     "tailwind-merge": "^3.4.0",
-    "zod": "^4.1.12"
+    "zod": "^4.1.13"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
+    "@tailwindcss/postcss": "^4.1.17",
+    "@types/node": "^20.19.25",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
     "dotenv": "^17.2.3",
     "drizzle-kit": "^0.31.7",
-    "eslint": "^9",
-    "eslint-config-next": "16.0.3",
-    "tailwindcss": "^4",
-    "typescript": "^5"
+    "eslint": "^9.39.1",
+    "eslint-config-next": "16.0.7",
+    "tailwindcss": "^4.1.17",
+    "typescript": "^5.9.3"
   }
 }
